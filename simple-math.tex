@@ -1,0 +1,827 @@
+\documentclass{report}
+
+\title{\Huge{Convex Optimization}}
+
+\author{\huge{Karthik Srinivasan}}
+\date{\today} 
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mdframed}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}[section]
+
+\newtheorem{corollary}{Corollary}[theorem]
+
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{remark} \newtheorem{remark}{Remark}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}[section]
+
+\theoremstyle{remark}
+\newtheorem{solution}{Solution}
+
+\newenvironment{bthm}
+  {\begin{mdframed}\begin{theorem}}
+  {\end{theorem}\end{mdframed}}
+
+\newenvironment{bdef}
+  {\begin{mdframed}\begin{definition}}
+  {\end{definition}\end{mdframed}}
+
+
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+
+\chapter{Convex Sets}
+
+\section{Affine Sets}
+
+\begin{theorem}[Affine]
+    \[
+    x = \theta x_1 + (1 - \theta)x_2
+    .\] 
+\end{theorem}
+
+\begin{definition}[Affine Set]
+    Contains the line through any two distinct points in a set
+       
+\end{definition}
+
+
+\begin{example}
+    Solution of set of linear equations ${x | Ax = b}$ is an affine set. 
+\end{example}
+
+\begin{proof}
+    \begin{align*}
+        Ax_1 = b \\
+        Ax_2 = b \\
+        Ax = A(\theta x_1 + (1-\theta)x_2) = \\
+        \theta Ax_1 + (1-\theta)Ax_2 \\
+        = \theta b + (1-\theta)b = b
+    .\end{align*}
+\end{proof}
+
+\begin{definition}[Line Segment]
+    \[
+    x = \theta x_1 + (1-\theta_2)x_2, 0 \le \theta \le 1
+    .\] 
+\end{definition}
+
+\begin{definition}[Convex Set]
+      Contains line segment between any two poitns in the set:
+      \[
+          x1,x2 \in C, 0 \le \theta \le 1 \implies \theta x_1 + (1-\theta)x_2 \in C
+      .\] 
+\end{definition}
+
+
+\begin{remark}
+    This is analagous to a clear line path between any two points in the set   
+\end{remark}
+
+\begin{definition}[Convex Combination]
+    Convex combination of $x_1, \ldots, x_n$ : any point $x$ of the form:
+    \[
+    x = \theta_1 x_1 + \theta_2 x_2 + \ldots + \theta_k x_k
+    .\] 
+    with $\theta_1 + \ldots + \theta_k = 1$, $\theta_i \ge 0$
+\end{definition}
+
+
+\begin{definition}[Convex Hull]
+    Set of all convex combinations of points in a set $S$
+       
+\end{definition}
+
+\begin{remark}
+    The convex hull of a set $S$ is denoted \textbf{conv}$S$   
+\end{remark}
+
+Think of the convex hull as the smallest convext region encompassing a set
+
+\begin{definition}[Conic (nonnegative) combination]
+    The conic combination of $x_1$ and $x_2$ : any point of the form
+    \[
+    x = \theta_1 x_1 + \theta_2 x_2
+    .\] 
+     with $\theta_1 \ge 0, \theta_2 \ge 0$  
+\end{definition}
+
+\begin{definition}[Convex Cone]
+      Set that contains all conic combinations of points in the set 
+\end{definition}
+
+\section{Common Sets}
+
+\begin{definition}[Hyperplane]
+    Set of the form $\{x | a^{T}x = b\}(a \neq 0)$
+       
+\end{definition}
+
+\begin{remark}
+    In $\mathbb{R}^2$, this is a line   
+\end{remark}
+
+\begin{definition}[Halfspace]
+    set of the form $\{x | a^{T}x \le b\}(a \neq 0)$
+\end{definition}
+
+\begin{enumerate}
+    \item $a$ is the normal vector 
+        \item hyperplanes are affine and convex, halfspaces are convex
+\end{enumerate}
+
+
+\begin{definition}[Euclidean Ball]
+    \[
+    B(x_c,r) = \{ x | \|x - x_c\|_2 \le r \} = \{ x_c + ru | \|u\|_2 \le 1 \} 
+    .\]  
+\end{definition}
+
+
+\begin{definition}[Ellipsoid]
+    Set of the form:
+    \[
+    \{x | (x-x_c)^{T}P^{-1}(x-x_c)\le 1\}
+    .\] 
+      with $P \in S_{++}^{n}$ (i.e. $P$ is symmetric positive definite) 
+\end{definition}
+
+\begin{remark}
+    Square roots of the  eigenvalues of $P$ are the lengths of the semi-axis of the ellipse   
+\end{remark}
+
+\section{Norm balls and Norm Cones}
+
+\begin{definition}[Norm]
+    a function that satisfies:
+    \begin{enumerate}
+        \item $\|x\|\ge 0: \|x\| = 0 \iff x = 0$
+            \item $\|tx\| = |t|\|x\| \text{ for } t \in \mathbb{R}$
+                \item $\|x + y\| \le  \|x\| + \|y\|$
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[Norm Ball]
+    with center $x_c$ and radius $r$ :
+    \[
+    \{x \text{ }| \text{ }\|x - x_c\| \le  r\}
+    .\] 
+\end{definition}
+
+
+\begin{definition}[Norm Cone]
+    \[
+    \{(x,t) \text{ } | \text{ } \|x\| \le t \}
+    .\] 
+      $x \in \mathbb{R}^{n}, t\in \mathbb{R}$ 
+\end{definition}
+
+
+\begin{remark}
+    These are convex   
+\end{remark}
+
+\begin{definition}[Polyhedra]
+    Solution set of finitely many lienar inequalities and equalities:
+    \[
+        Ax \le b, && Cx = d
+    .\] 
+    $(A \in \mathbb{R}^{m \times n}, \le \text{ is componentwise inequality})$   
+\end{definition}
+
+\begin{remark}
+    Think of this as an intersection of a finite number of halfspaces   
+\end{remark}
+
+\begin{definition}[Positive Semidefinite Cone]
+    Notation:
+    \begin{enumerate}
+        \item $S^{n}$ is a set up symmetric $n \times n$ matrices
+    \item $S_+^{n} = \{X \in S^{n} \text{ } | \text{ } X \ge  0\}$ : \text{ positive definite }$n \times n$ matrices
+    \end{enumerate}
+    \[
+    X \in S_+^{n} \iff z^{T}Xz \ge 0 \text{ for all $z$}
+    .\] 
+      $S_{+}^n$ is a convex cone \\
+      $S_{++}^{n} = \{X \in S^{n} \text{ }| \text{ }X > 0\}$: positive definite $n \times n$ matrices
+\end{definition}
+
+\begin{example}
+    \[
+\begin{bmatrix}
+    x & y \\
+    y & z \\
+\end{bmatrix}
+\in S_+^{2}
+    .\] 
+\end{example}
+
+\section{Operations that preserve convexity}
+
+\begin{enumerate}
+    \item Apply original definition: $\theta x_1 + (1-\theta)x_2 \in C$  
+   \item Show that C is obtained from eximple convex sets by operations that preserve convexity:
+       \begin{enumerate}
+           \item intersection
+               \item  affine functions
+                   \item  perspective function
+                       \item linear fractional functions
+           
+       \end{enumerate}
+\end{enumerate}
+
+\begin{theorem}[Intersection]
+    The intersection of any number of convex sets is convex
+\end{theorem}
+
+
+\begin{definition}[Affine Function]
+    Suppose $f: \mathbb{R}^{n} \to \mathbb{R}^{m}$ is affine $(f(x) = Ax + b \text{ with } A\in \mathbb{R}^{m \times n}, b \in \mathbb{R}^{m})$ 
+\begin{enumerate}
+    \item the image of a convex set under f is convex
+        \[
+        S \in \mathbb{R}^{n} \text{ convex} \implies f(S) = \{f(x)\text{ } | \text{ } x \in S \} \text{ convex}
+        .\] 
+        \item the inverse image $f^{-1}(C)$ of a convex set under $f$ is convex
+            \[
+            C \in \mathbb{R}^{m} \text{convex} \implies f^{-1}(C) = \{x \in \mathbb{R}^{n} \text{ }| \text{ }f(x)\in C\} \text{ convex}
+            .\] 
+    
+\end{enumerate}
+       
+\end{definition}
+
+\begin{remark}
+    $f^{-1}(C)$ does not require that $f$ is invertible, rather all points that have an image in $C$ will be included even if they map to the same element in $C$   
+\end{remark}
+
+\begin{definition}[Perspective function]
+    $P: \mathbb{R}^{n+1}\to R^{n}$ :
+    \[
+    P(x,t) = \frac{x}{t}, \text{   }\textbf{dom}P = \{(x,t) \text{ }|\text{ }t>0\}
+    .\] 
+      images and inverse images of convex sets underp erspective are convex 
+\end{definition}
+
+\begin{remark}
+    This has the effect of normalizing by the last component   
+\end{remark}
+
+\section{Generalized Inequalities}
+
+\begin{definition}[Proper cone]
+    A convex cone $K \in \mathbb{R}^{n}$ is a proper cone if:
+    \begin{enumerate}
+        \item K is closed
+            \item K is solid (has nonempty interior)
+                \item K is pointed (contains no line, i.e. a ray and its negative cannot both be in the cone)
+    \end{enumerate}
+       
+\end{definition}
+
+
+\begin{definition}[Generalized inequality defined by proper cone K]
+    \[
+    x\le_K y \iff y-x\in K, \text{           } x\le_K y \iff y-x\in \textbf{int}K
+    .\] 
+       
+\end{definition}
+
+\begin{definition}[Minimum Element]
+    $x \in S$ is minimum with respect to $\le_K$ if:
+    \[
+    y\in S \implies x \le_K y
+    .\] 
+       
+\end{definition}
+
+\begin{definition}[Minimal Element]
+    $x \in S$ is the minimal element of $S$ with respect to $\le_K$ if
+    \[
+    y \in S, y\le_K x \implies y=x
+    .\] 
+       
+\end{definition}
+
+ \begin{remark}
+    Minimal implies that if you are in the set \textbf{and} comparible to the point, then you are greater than or equal to the point that is being compared   
+\end{remark}
+
+
+\begin{bthm}[Separating Hyperplane Theorem]
+    if $C$ and $D$ are disjoint convex sets, then there exists $a \neq  0, b$ such that:
+    \[
+    a^{T}x \le b \text{ for } x\in C, \text{     } a^{T}x \ge b \text{ for } x\in D
+    .\] 
+      the hyperplane $\{x \text{ }| \text{ }a^{T}x = b\}$ separates $C$ and $D$ 
+\end{bthm}
+
+\begin{remark}
+    This is a \textbf{linear clasifier} in machine learning   
+\end{remark}
+
+
+\begin{theorem}[Supporting Hyperplane Theorem]
+      supporting hyperplane to a set $C$ at boundary point $x_0$ :
+      \[
+      \{x \text{ }|\text{ }a^{T}x = a^{T}x_0\}
+      .\] 
+      where $a \neq 0$ and $a^{T}x \le a^{T}x_0$ for all $x\in C$
+\end{theorem}
+
+\begin{remark}
+    This implies that there is a halfspace of the supporting hyperplane that contains $C$   
+\end{remark}
+
+\section{Dual cones and Generalized Inequalities}
+
+\begin{definition}[Dual Cone]
+    dual cone of a cone $K$ :
+    \[
+    K^{*} = \{y \text{ }|\text{ }y^{T}x\ge 0 \text{ for all }x\in K\}
+    \] 
+set of all vectors that make a non-negative inner product with all vectors in $K$       
+\end{definition}
+
+\begin{example}
+Few examples:
+    \begin{enumerate}
+        \item $K = \mathbb{R}_+^{n}: K*=\mathbb{R}_+^{n}$
+             \item $K=S_+^{n}: K*=S_+^{n}$
+    \end{enumerate} 
+\end{example}
+
+
+\chapter{Convex Functions}
+
+\begin{definition}[Convex Function]
+    $f: \mathbb{R}^{n}\to \mathbb{R}$ is convex if \textbf{com}$f$ is a convex set and
+    \[
+    f(\theta x+(1-\theta)y) \le  \theta f(x) + (1-\theta)f(y)
+    .\] 
+      for all $x,y\in$ \textbf{dom}$f$, $0\le \theta \le 1$
+\end{definition}
+\begin{remark}
+    properties:
+    \begin{enumerate}
+        \item $f$ is concave if $-f$ is convex
+            \item $f$ is strictly convex if \textbf{dom}$f$ is convex and
+                \[
+               f(\theta x+(1-\theta)y)<\theta f(x) + (1-\theta)f(y)
+                .\] 
+       for $x,y\in \textbf{dom}f, x\neq y, 0<\theta<1$ 
+    \end{enumerate}
+\end{remark}
+
+\begin{example}
+    Convex:
+    \begin{enumerate}
+        \item affine: $ax+b$ on $\mathbb{R}$ 
+            \item exponential: $e^{ax}$ for $a\in\mathbb{R}$ 
+                \item powers: $x^{\alpha}$ on $\mathbb{R}_{++}$ for $\alpha\ge 1$ or $\alpha\le 0$
+                     \item powers of absolute values: $|x|^{p}$ on $\mathbb{R}$ 
+                 \item negative entropy: $x \log(x)$ on $R_{++}$
+    \end{enumerate}
+    Concave:
+    \begin{enumerate}
+        \item affine: $ax+b$ 
+    \item powers: $x^{\alpha}$ on $R_{++}$ for  $0 \le \alpha \le 1$
+        \item logarithm: $\log(x)$ on $R_{++}$
+    \end{enumerate}
+\end{example}
+
+\section{Restriction of convex function to a line}
+
+$f:\mathbb{R}^{n}\to \mathbb{R}$ is convex if and only if the function $g:\mathbb{R}\to \mathbb{R}$:
+\[
+g(t) = f(x + tv), \textbf{dom }g = \{t \text{ }| \text{ }x + tv\in \textbf{dom}f\}
+.\] 
+is convex (in $t$) for any $x\in \textbf{dom}f,v\in \mathbb{R}^{n}$
+
+This is to say that we check the convexity of $f$ by checking convexity of functions of one variable repeatedly.
+
+\section{Conditions}
+
+$f$ is \textbf{differentiabile} if \textbf{dom}$f$ is open and the gradient
+\[
+\nabla f(x) = (\frac{\partial f(x)}{\partial x_1}, \frac{\partial f(x)}{\partial x_2} ,\ldots, \frac{\partial f(x)}{\partial x_n} )    
+.\] 
+
+exists at each $x \in \textbf{dom }f$
+
+\begin{definition}[First Order Condition]
+    differentiable $f$ w ith convex domain is convex iff
+    \[
+    f(y)\ge f(x) + \nabla f(x)^{T}(y-x) \text{ for all }x,y\in\textbf{dom}f
+    .\] 
+\end{definition}
+
+\begin{remark}
+    This gradient term is the first order approximation of $f$, called a global underestimator   
+\end{remark}
+
+\begin{definition}[Twice Differentiable]
+      $f$ is twice differentiable if \textbf{dom}f is open and the Hessian $\nabla^2 f(x)\in \textbf{S}^{n}$
+      \[
+      \nabla^2 f(x)_{ij} = \frac{\partial^2 f(x)}{\partial x_i \partial x_j}, \text{   } i,j = 1,\ldots,n
+      .\] 
+      exists at each $x\in\textbf{dom}f$
+\end{definition}
+
+
+\begin{definition}[Second Order Conditions]
+      For twice differentable $f$ with convex domain:
+      \begin{enumerate}
+          \item $f$ is convex iff
+              \[
+              \nabla^2f(x) \ge  0 \text{ for all } x\in\textbf{dom}f
+              .\] 
+              \item if $\nabla^2f(x)> 0$ for all $x\in\textbf{dom}f$ then $f$ is strictly convex
+      \end{enumerate}
+\end{definition}
+
+\begin{example}
+    Examples of second order conditions being met:
+    \begin{enumerate}
+        \item quadratic function: $f(x) = (\frac{1}{2})x^{T}Px + q^{T}x + r$ (with $P\in S^{n}$)
+            \[
+            \nabla f(x) = Px + q, \text{      } \nabla^2f(x) = P
+            .\] 
+convex if $P \ge 0$
+\item Least Squares Objective: $f(x) = \|Ax - b\|_2^{2}$ 
+    \[
+    \nabla f(x) = 2A^{T}(Ax-b), \nabla^2f(x) = 2A^{T}A 
+    .\] 
+       convex for any $A$ 
+       \item Quadratic over linear: $f(x,y) = \frac{x^2}{y}$ 
+           \[
+           \nabla^2f(x,y) = \frac{2}{y^3}
+\begin{bmatrix}
+    y \\
+    -x \\
+\end{bmatrix}
+\begin{bmatrix}
+    y \\
+    -x \\
+\end{bmatrix}^{T} \ge 0
+           .\] 
+    \end{enumerate} 
+\end{example}
+
+
+\section{Epigraph and Sublevel Set}
+\begin{definition}[Alpha-Sublevel Set]
+    $\alpha$-sublevel set of $f: \mathbb{R}^{n}\to R$ :
+    \[
+    C_\alpha = \{x \in\textbf{dom}f \text{ }| \text{ }f(x)\le \alpha \}
+    .\] 
+      sublevel sets of convex functions are convex (converse is false) 
+\end{definition}
+
+\begin{definition}[Epigraph]
+    Epigraph of $f:\mathbb{R}^{n}\to \mathbb{R}$ 
+    \[
+    \textbf{epi}f = \{(x,t)\in \mathbb{R}^{n+1} \text{ }| \text{ }x\in \textbf{dom}f, f(x)\le t \}
+    .\] 
+      $f$ is convex iff \textbf{epi}$f$ is a convex set 
+\end{definition}
+
+
+\section{Preservation of Convexity}
+\begin{enumerate}
+    \item \textbf{Nonnegative multiple:} $\alpha f$ is convex if $f$ is convex and $\alpha\ge 0$
+        \item \textbf{Sum:} $f_1+f_2$ convex if $f_1,f_2$ convex (extends to infinite sums, integrals)
+            \item \textbf{Composition with affine function:} $f(Ax+b)$ is convex if $f$ is convex
+                \item \textbf{Pointwise Maximum:} if $f_1,\ldots,f_m$ are convex, then $f(x) = \text{max}\{f_1(x),\ldots,f_m(x)\}$ is convex
+                    \item \textbf{Composition of Scalar Functions}: $g:\mathbb{R}^{n}\to \mathbb{R}$, and $h:\mathbb{R}\to \mathbb{R}$ :
+                        \[
+                       f(x) = h(g(x)) 
+                        .\] 
+                        $f$ is convex if $g$ convex, $h$ convex, extended value extention of $h$ is non-decreasing.
+                        \item \textbf{Vector Composition:} composition of $g: \mathbb{R}^{n}\to \mathbb{R}^{k}$ and $h:\mathbb{R}^{k}\to \mathbb{R}$:
+                            \[
+                            f(x) = h(g(x)) = h(g_1(x), g_2(x),\ldots,g_k(x))
+                            .\] 
+                            $f$ is convex if $g_i$ convex, $h$ convex, extended value extention of $h$ is nondecreaseing in each argument
+                            \item \textbf{Minimization}: if $f(x,y)$ is convex in $(x,y)$ and $C$ is a convex set, then
+                                \[
+                                g(x) = \text{inf}_{y\in C}f(x,y)
+                                .\] 
+                                is convex
+\end{enumerate}
+
+\section{Conjugate Function}
+
+\begin{definition}[Conjugate]
+    The conjugate of a function $f$ is
+    \[
+    f^{*}(y) = \text{sup}_{x\in\textbf{dom}f}(y^{T}x-f(x))
+    .\] 
+       
+\end{definition}
+
+
+\begin{theorem}[Convexity of the Conjugate]
+    $f^{*}$ is convex, as $y^{T}x - f(x)$ is affine, thus we are taking the supremum with respect to $x$ of a family of affine (convex) functions, which is inherently convex.
+       
+\end{theorem}
+
+\section{Quasiconvex Functions}
+
+\begin{definition}[Quasi-Convex]
+    $f:\mathbb{R}^{n}\to \mathbb{R}$ is quasiconvex if \textbf{dom}$f$ is convex and the sublevel sets:
+    \[
+    S_\alpha = \{x\in\textbf{dom}f \text{ }|\text{ }f(x)\le \alpha\}
+    .\] are convex for all $\alpha$
+      \begin{enumerate}
+          \item $f$ is quasiconcave if $-f$ is quasiconvex
+              \item $f$ is quasilinear if it is quasiconvex and quasiconcave
+      \end{enumerate} 
+\end{definition}
+
+\begin{remark}
+    In $\mathbb{R}^{n}$, this has the interpretation of being monotone decreasing up to somepoint, then monotone increasing after that point   
+\end{remark}
+
+\begin{definition}[Log Concave]
+    a positive function $f$ is log-concave if $\log(f)$ is concave:
+    \[
+    f(\theta x+(1-\theta)y) \ge f(x)^{\theta}f(y)^{1-\theta} \text{ for }0\le \theta\le 1
+    .\] 
+    $f$ is log-convex if $\log f$ is convex
+       
+\end{definition}
+
+\begin{remark}
+    Almost all statistical densities are log-concave   
+\end{remark}
+
+
+\chapter{Duality}
+
+\section{Lagrangian}
+We start with the standard form problem, but this time we don't restrict the objective $f_0(x)$ or the constraints, $f_i(x)$ to be convex:
+\begin{definition}[Lagrangian]
+    $L: \mathbb{R}^{n} \times \mathbb{R}^{m} \times \mathbb{R}^{p} \to \mathbb{R}^{} \text{ with } \textbf{dom}L = D \times  \mathbb{R}^m \times \mathbb{R}^{p}$
+\[
+L(x,\lambda, \nu) = f_0(x) + \sum_{i=1}^{m} \lambda_i f_i(x) + \sum_{i=1}^{p} \nu_i h_i(x)
+.\]
+This is a weighted sum of objective and constraint functions, where $\lambda_i$ is the Lagrange multiplier associated with $f_i(x)\le 0$ and $\nu_i$ is the Lagrange multiplier associated with $h_i(x)=0$. Think of $h_i(x)$ as a residual - 0 if the constraint is satisfied.
+\end{definition}
+
+
+\begin{definition}[Lagrange Dual Function]
+    $g: \mathbb{R}^{m} \times \mathbb{R}^{p} \to \mathbb{R}^{} $,
+ \begin{align*}
+     g(\lambda, \nu) = & \inf_{x \in \mathbb{D}} L(x,\lambda, \nu) \\
+                      = & \inf_{x\in \mathbb{D}}(f_0(x) + \sum_{i=1}^{m} \lambda_i f_i(x) + \sum_{i=1}^{p} \nu_i h_i(x))
+ .\end{align*} 
+   $g$ is concave, can be $-\infty$ for some $\lambda,\nu$ 
+     
+\end{definition}
+
+\begin{remark}
+    One interpretation of this is the optimal cost with the prices $\lambda_i$, $\nu_i$   
+\end{remark}
+
+\begin{corollary}
+    $g$ is concave even if the original problem is non-convex   
+\end{corollary}
+
+\begin{proof}
+    $g$ is the infimum over a family of affine functions, and is thus convex as proved last chapter     
+\end{proof}
+ 
+\begin{bthm}[Lower Bound Property]
+    if $\lambda \ge 0$, then $g(\lambda,n)\le p^{*}$ where $p^{*}$ is the optimal solution
+\end{bthm}
+
+\begin{proof}
+If \tilde{x} is feasible and $\lambda\ge 0$, then
+\[
+f_0(\tilde{x}) \ge  L(\tilde{x},\lambda,\nu) \ge \inf_{x\in D}L(x,\lambda,\nu)=g(\lambda,\nu)
+.\] 
+minimizing over all feasible $\tilde{x}$ gives $p^{*}\ge g(\lambda,\nu)$ 
+\end{proof}
+ 
+
+\section{Least-Norm Solution of Linear Equations}
+
+\begin{align*}
+    \text{minimize } & x^{T}x \\
+    \text{subject to } & Ax = b 
+.\end{align*}
+
+
+\textbf{Dual Function:}
+
+\begin{enumerate}
+    \item Lagrangian is $L(x,\nu) x^{T}x + \nu^{T}(Ax+b)$
+         \item to minimize $L$ over $x$, set gradient equal to zero:
+             \[
+             \nabla_x L(x,\nu) = 2x+A^{T}\nu = 0 \implies x = -(\frac{1}{2})A^{T}\nu
+             .\] 
+             \item plug in $L$ to obtain $g$ :
+                 \[
+                 g(\nu) = L((-\frac{1}{2})A^{T}\nu,\nu)=-\frac{1}{4}\nu^{T}A\cdot A^{T}\nu-b^{T}\nu
+                 .\] a concave function of $\nu$
+    
+\end{enumerate}
+
+\textbf{Lower Bound Property:}
+ \[
+p^{*} \ge -(\frac{1}{4})\nu^{T}A\cdot A^{T}\nu - b^{T}\nu \text{ for all }\nu
+.\] 
+
+
+
+\begin{example}
+    \begin{align*}
+        \text{minimize } & f_0(x)    \\
+        \text{subject to } & Ax \le  b,  Cx = d
+    .\end{align*} 
+\textbf{Dual Function}:
+
+\begin{align*}
+    g(\lambda,x) &= \inf_{x\in \textbf{dom}f_0}(f_0(x)+(A^{T}\lambda+C^{T}\nu)^{T}x-b^{T}\lambda-d^{T}\nu)\\
+                 &= -f_0^{*}(-A^{T}\lambda-C^{T}\nu)-b^{T}\lambda-d^{T}\nu
+.\end{align*}
+
+Recall that the definition of conjugate $f^{*}(y)=\sup_{x\in\textbf{dom}f}(y^{T}x-f(x))$ \\
+Simpliefies derivation of dual if conjuage of $f_0$ is known
+\end{example}
+
+\section{The Dual Problem}
+
+\begin{definition}[Lagrange Dual Problem]
+    \begin{align*}
+        \text{Maximize } & \quad g(\lambda,\nu) \\
+        \text{subject to } & \quad \lambda \ge 0
+    .\end{align*}
+       
+\end{definition}
+
+\begin{itemize}
+    \item Finds best lower bound on $p^{*}$ obtained from Lagrange dual function
+        \item A convex optimization problem, optimal value $d^{*}$
+            \item $\lambda,\nu$ are dual feasible if $\lambda \ge 0$, $(\lambda,\nu)\in \textbf{dom}g$ 
+                \item often simplified by making implicit constraint $(\lambda,\nu)\in \textbf{dom}g$
+\end{itemize}
+
+\begin{theorem}[Weak Duality]
+    \[
+    d^{*} \le p^{*}
+    .\] 
+     \begin{itemize}
+         \item Always holds (for convex or nonconvex)
+             \item Can be used to find nontrivial lower bounds for difficult problems
+
+     \end{itemize}
+       
+\end{theorem}
+
+\begin{theorem}[Strong Duality]
+   \[
+   d^{*} = p^{*}
+   .\]  
+   \begin{itemize}
+       \item Does not hold in general
+           \item Usually holds for convex problems
+               \item \textbf{Constraint qualitifcations} guarantee strong duality
+   \end{itemize}
+   
+       
+\end{theorem}
+
+\begin{remark}
+    $p^{*} - d^{*}$ is known as the \textbf{duality gap}  
+\end{remark}
+
+
+\begin{definition}[Complimentary Slackness]
+    Assume strong duality holds, $x^{*}$ is primal optimal, $(\lambda^{*},\nu^{*})$ is dual optimal
+   \begin{align*}
+        f_0(x^{*}) = g(\lambda^{*}, \nu^{*}) &= \inf_{x}(f_0(x) + \sum_{i=0}^{m} \lambda_i^{*}f_i(x) + \sum_{i=1}^{p} \nu^{*}h_i(x)) \\
+                                             &\le f_0(x^{*}) + \sum_{i=1}^{m} \lambda_i^{*}f_i(x^{*})+\sum_{i=1}^{p} \nu_i^{*}h_i(x^{*}) \\
+                                             &\le f_0(x^{*})
+   .\end{align*} 
+   thus, the two inequalities hold with equality  
+   \begin{itemize}
+       \item $x^{*}$ minimizes $L(x,\lambda^{*},\nu^{*}$
+          \item $\lambda_i^{*}f_i(x^{*})$ for $i=1,\ldots,m$ (known as complementary slackness):
+              \[
+                  \lambda_i^{*} >0 \implies f_i(x^{*})=0,\qquad f_i(x^{*}) < 0 \implies \lambda_i^{*}=0
+              .\] 
+   \end{itemize}
+\end{definition}
+
+
+\section{KKT Conditions}
+
+The following conditions are KKT conditions for a problem with differentiable $f_i, h_i$:
+ \begin{enumerate}
+     \item primal constraints: $f_i(x) \le  0, i=1,\ldots,m, h_i(x)=0,i=1,\ldots,p$
+         \item dual constraints: $\lambda\ge 0$
+             \item complementary slackness: $\lambda_i f_i(x)=0, i=1,\ldots,m$
+                 \item gradient of Lagrangian with respect to $x$ vanishes:
+                     \[
+                     \nabla f_0(x) + \sum_{i=1}^{m} \lambda_i\nabla f_i(x)+\sum_{i=1}^{p} \nu_i\nabla h_i(x)=0
+                     .\] 
+                     If strong duality holds and $x, \lambda,\nu$ are optimal, then they must satisfy the KKT conditions
+    
+\end{enumerate}
+
+\textbf{The converse also holds:} if $\tilde{x}, \tilde{\lambda},\tilde{\nu}$ satisfy KKT for a convex problem, then they are optimal:
+\begin{itemize}
+    \item from complementary slackness: $f_0(\tilde{x})=L(\tilde{x},\tilde{\lambda},\tilde{\nu})$
+        \item from 4th condition (and convexity): $g(\tilde{\lambda},\tilde{\nu})=L(\tilde{x},\tilde{\lambda},\tilde{\nu})$
+\end{itemize}
+hence, $f_0(\tilde{x})=g(\tilde{\lambda},\tilde{\nu})$
+
+\section{Perturbation and Sensitivity Analysis}
+\textbf{Unperturbed optimization problem and its dual:}
+\begin{align*}
+    \text{mimimize} \quad &f_0(x) &\text{maximize}\quad &g(\lambda,\nu) \\
+    \text{subject to} \quad &f_i(x) \le 0, \quad i=1,\ldots,m \quad &\text{subject to}\quad &\lambda\ge 0  \\
+                            &h_i(x)=0, \quad i=1,\ldots,p
+.\end{align*}
+
+
+\textbf{Perturbed problem and its dual:}
+\begin{align*}
+    \text{mimimize} \quad &f_0(x) &\text{maximize}\quad &g(\lambda,\nu)-u^{T}\lambda-v^{T}\nu \\
+    \text{subject to} \quad &f_i(x) \le u_i, \quad i=1,\ldots,m \quad &\text{subject to}\quad &\lambda\ge 0  \\
+                            &h_i(x)=v_i, \quad i=1,\ldots,p
+.\end{align*}
+\begin{itemize}
+   \item $x$ is primal variable; $u,v$ are parameters  
+       \item $p^{*}(u,v)$ is optimal value as a function of $u,v$ 
+           \item We want info about $p^{*}(u,v)$ that we can obtain from the solution of the unperturbed problem and its dual
+\end{itemize}
+
+
+\textbf{Global Sensitivity:}
+Assume strong duality holds for unperturbed problem, and that $\lambda^{*}, \nu^{*}$ are dual optimal for unperturbed problem: \\
+
+Apply weak duality to perturbed problem:
+\begin{align*}
+    p^{*}(u,v) &\ge \quad g(\lambda^{*},\nu^{*}) - u^{T}\lambda^{*} - v^{T}\nu^{*} \\
+               &= \quad p^{*}(0,0) - u^{T}\lambda^{*}-v^{T}\nu^{*}
+.\end{align*}
+
+\textbf{Sensitivity Interpretation:} \\
+\begin{itemize}
+    \item  if $\lambda_i^{*}$ large: $ p^{*}$ increases greatly if we tighten constraint $i, \  (u_i < 0)$
+        \item if $\lambda_i$ small: $p^{*}$ does not decrease much is we loosen constraint $i, \  (u_i>0)$
+             \item if $\nu_i$ large and positive: $p^{*}$ increases greatly if we take $v_i<0$;\\
+                 if $\nu_i$ large and negative: $p^{*}$ increases greatly if we take $v_i > 0$
+                  \item if $\nu_i$ small and positive: $p^{*}$ does not decrease much if we take $v_i>0$ ; \\
+                      if $\nu_i^{*}$ small and negative: $p^{*}$ does not decrease much if we take $v_i < 0$
+                
+\end{itemize}
+
+\textbf{Local Sensitivity:} if, in addition, $p^{*}(u,v)$ is differentiable at  $(0,0)$, then:
+\[
+\lambda_i^{*} = -\frac{\partial p^{*}(0,0)}{\partial u_i}, \qquad \nu_i^{*} = -\frac{\partial p^{*}(0,0)}{\partial v_i} 
+.\] 
+
+\begin{proof}
+    From global sensitivity result:
+    \begin{align*}
+        \frac{\partial p^{*}(0,0)}{\partial u_i} &= \lim_{t \searrow 0}\frac{p^{*}(te_i,0)-p^{*}(0,0)}{t}  \ge -\lambda_i^{*} \\
+        \frac{\partial p^{*}(0,0)}{\partial u_i} &= \lim_{t \nearrow 0} \frac{p^{*}(te_i,0)-p^{*}(0,0)}{t} \le -\lambda_i^{*} 
+    .\end{align*}
+    hence, equality
+\end{proof}
+ 
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
